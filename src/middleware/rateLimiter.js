@@ -2,15 +2,16 @@ import ratelimit from "../config/upstash.js";
 
 const rateLimit = async (req, res, next) => {
     try {
-        const { success } = await ratelimit.limit(userid);
-        if (!success) {
-            return res.status(429).json({ message: "Too many requests, please try again later." 
+        const { success } = await ratelimit.limit("my-rate-limit");
 
+        if (!success) {
+            return res.status(429).json({
+                 message: "Too many requests, please try again later." 
             });
         }
         next();
     } catch (error) {
-      console.error("Error in rateLimit middleware:", error.message);
+      console.log("Rate Limit error:", error);
       next(error);
       // res.status(500).json({ message: "Internal Server Error" });
       // next(error);
@@ -20,3 +21,31 @@ const rateLimit = async (req, res, next) => {
 };
 
 export default rateLimit;
+
+// ====================================================================
+
+// version 2
+// import ratelimit from "../config/upstash.js";
+
+// const rateLimit = async (req, res, next) => {
+//     try {
+
+//         const identifier = req.ip;   // <-- added
+
+//         const { success } = await ratelimit.limit(identifier);   // <-- changed
+
+//         if (!success) {
+//             return res.status(429).json({
+//                 message: "Too many requests, please try again later."
+//             });
+//         }
+
+//         next();
+
+//     } catch (error) {
+//         console.error("Error in rateLimit middleware:", error.message);
+//         next(error);
+//     }
+// };
+
+// export default rateLimit;
