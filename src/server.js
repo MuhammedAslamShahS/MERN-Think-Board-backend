@@ -6,10 +6,12 @@ import dotenv from "dotenv";
 dotenv.config();
 
 console.log(process.env.MONGODB_URI);
-
 const app = express();
-
 connectDB();
+
+// Middleware to parse JSON bodies
+app.use(express.json());
+
 
 const PORT = process.env.PORT || 5000;
 
